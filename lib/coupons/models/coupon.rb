@@ -41,7 +41,11 @@ module Coupons
 
       def apply(options)
         input_amount = BigDecimal("#{options[:amount]}")
-        discount = BigDecimal(percentage_based? ? percentage_discount(options[:amount]) : amount)
+        if options[:amount] < min_transaction
+          discount = 0
+        else
+          discount = BigDecimal(percentage_based? ? percentage_discount(options[:amount]) : amount)
+        end
         total = [0, input_amount - discount].max
 
         options = options.merge(total: total, discount: discount)
